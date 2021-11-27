@@ -7,7 +7,13 @@ terraform {
       version = "=2.87.0"
     }
   }
-  
+#   This storage account is created outside this provisioning to manage the desiered state of the infrastructure.
+  backend "azurerm" {
+    resource_group_name                 = "rg-weathman-infrastate" 
+    storage_account_name                = "weathermantfstate"
+    container_name                      = "terraform-state"
+    key                                 = "weatherman.tfstate"
+  }
 }
 
 # Configure the Microsoft Azure Provider
