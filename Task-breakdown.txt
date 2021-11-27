@@ -4,7 +4,10 @@
 4. Create CI pipelines using Github actions.
 5. Create a webapp to manually publish and check whether the app works fine. 
       This is to find out any issues we may find during deployment.
-6. IAC - Yet to elaborate
+6. IAC 
+   1. Generate Azure creds for Terraform to provision the infrastruture - Add these as secrets to Github repository.
+   2. Create Azure storage account to persist the terraform state of the infrastruture
+
 7. CD - Yet to elaborate
 8. DevOps Solution architecture.
 9. Security consideration.
