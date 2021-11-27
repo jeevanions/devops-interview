@@ -9,4 +9,5 @@
 8. DevOps Solution architecture.
 9. Security consideration.
 10. Automated testing for quality gate. 
+11. App Versioning
 
