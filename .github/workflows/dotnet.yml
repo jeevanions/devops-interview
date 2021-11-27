@@ -48,7 +48,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'weathman'
+          app-name: 'dev-weatherMan'
           slot-name: 'production'
           publish-profile: ${{ secrets.PublishProfile }}
           package: .
