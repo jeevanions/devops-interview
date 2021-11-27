@@ -1,0 +1,12 @@
+1. Pull sorce code locally to build, run and verify.
+2. Register for an account with Accuweather, get the API key to configure the app.
+3. Update the app with API key locally to test it. 
+4. Create CI pipelines using Github actions.
+5. Create a webapp to manually publish and check whether the app works fine. 
+      This is to find out any issues we may find during deployment.
+6. IAC - Yet to elaborate
+7. CD - Yet to elaborate
+8. DevOps Solution architecture.
+9. Security consideration.
+10. Automated testing for quality gate. 
+
