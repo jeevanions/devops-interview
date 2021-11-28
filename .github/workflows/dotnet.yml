@@ -31,24 +31,48 @@ jobs:
           name: weathermanapp
           path: ${{env.DOTNET_ROOT}}/weatherman
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: 'production'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    defaults:
+      run:
+        shell: bash
+    
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: weathermanapp
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'dev-weatherMan'
-          slot-name: 'production'
-          publish-profile: ${{ secrets.PublishProfile }}
-          package: .
+    - name: 'Terraform Format'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+         tf_actions_subcommand: 'fmt'
+         tf_actions_working_dir: './Infrastructure'
+
+# Commented the deployment to finish the infrastruture setup
+  # deploy:
+  #   runs-on: windows-latest
+  #   needs: terraform
+  #   environment:
+  #     name: 'production'
+  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: weathermanapp
+
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: 'dev-weatherMan'
+  #         slot-name: 'production'
+  #         publish-profile: ${{ secrets.PublishProfile }}
+  #         package: .
