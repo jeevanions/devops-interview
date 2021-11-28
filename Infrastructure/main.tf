@@ -100,6 +100,43 @@ resource "azurerm_resource_group" "rg" {
 }
 
 
+# Create Azure Key Vault to store sensitive app settings
+resource "azurerm_key_vault" "kvweatherman" {
+  name                = "kv-weatherman"
+  location            = "uksouth"
+  resource_group_name = azurerm_resource_group.rg.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+
+  sku_name = "standard"
+}
+
+
+# Access Policy to allow permission to the current service account to create secret
+resource "azurerm_key_vault_access_policy" "kvsecretpermission" {
+  key_vault_id = azurerm_key_vault.kvweatherman.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+
+  object_id = data.azurerm_client_config.current.object_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  secret_permissions = var.kv-secret-permissions-optimal
+}
+
+# Secret - for weather api key - Add the secrets directly to KV.
+# WebApp will reference this secret directly from appsettings.
+resource "azurerm_key_vault_secret" "weathApiKeySecret" {
+  name         = "weatherApiKey"
+  value        = ""
+  key_vault_id = azurerm_key_vault.kvweatherman.id
+
+  lifecycle {
+    ignore_changes = [value, version]
+  }
+}
+
+
 # Create app service plan
 resource "azurerm_app_service_plan" "plan" {
   name                = "asp-${var.environment}-${var.webappName}"
