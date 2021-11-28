@@ -108,6 +108,14 @@ resource "azurerm_key_vault" "kvweatherman" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
 
   sku_name = "standard"
+  network_acls {
+    default_action = "Allow"
+    bypass         = "AzureServices"
+  }
+  enabled_for_deployment          = true
+  enabled_for_disk_encryption     = false
+  enabled_for_template_deployment = true
+  tags                            = local.common_tags
 }
 
 
@@ -118,9 +126,9 @@ resource "azurerm_key_vault_access_policy" "kvsecretpermission" {
 
   object_id = data.azurerm_client_config.current.object_id
 
-  lifecycle {
-    create_before_destroy = true
-  }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
   secret_permissions = var.kv-secret-permissions-optimal
 }
 
@@ -134,6 +142,10 @@ resource "azurerm_key_vault_secret" "weathApiKeySecret" {
   lifecycle {
     ignore_changes = [value, version]
   }
+  depends_on = [
+    azurerm_key_vault.kvweatherman,
+    azurerm_key_vault_access_policy.kvsecretpermission,
+  ]
 }
 
 
