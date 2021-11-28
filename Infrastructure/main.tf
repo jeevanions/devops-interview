@@ -7,12 +7,12 @@ terraform {
       version = "=2.87.0"
     }
   }
-#   This storage account is created outside this provisioning to manage the desiered state of the infrastructure.
+  #   This storage account is created outside this provisioning to manage the desiered state of the infrastructure.
   backend "azurerm" {
-    resource_group_name                 = "rg-weathman-infrastate" 
-    storage_account_name                = "weathermantfstate"
-    container_name                      = "terraform-state"
-    key                                 = "weatherman.tfstate"
+    resource_group_name  = "rg-weathman-infrastate"
+    storage_account_name = "weathermantfstate"
+    container_name       = "terraform-state"
+    key                  = "weatherman.tfstate"
   }
 }
 
@@ -23,36 +23,36 @@ provider "azurerm" {
 
 
 variable "webappName" {
-  type = string
-  default = "weatherMan"
+  type        = string
+  default     = "weatherMan"
   description = "The name of which your resources should start with."
   validation {
-    condition = can(regex("^[0-9A-Za-z]+$", var.webappName))
+    condition     = can(regex("^[0-9A-Za-z]+$", var.webappName))
     error_message = "Only a-z, A-Z and 0-9 are allowed to match Azure storage naming restrictions."
   }
 }
 
 variable "region" {
-  type = string
-  default = "UK South"
+  type        = string
+  default     = "UK South"
   description = "The Azure Region where the Resource Group should exist."
 }
 
 variable "owner" {
-  type = string
-  default = "WeatherForcastTeam"
+  type        = string
+  default     = "WeatherForcastTeam"
   description = "Used in created by tags to identify the owner of the resources."
 }
 
 variable "weatherApiKey" {
-  type = string
+  type        = string
   description = "API Key to access the weather API"
-  sensitive = true
+  sensitive   = true
 }
 variable "weatherApiBaseURL" {
-    type = string
-    description = "Weather api base url"
-    default = "http://dataservice.accuweather.com"
+  type        = string
+  description = "Weather api base url"
+  default     = "http://dataservice.accuweather.com"
 }
 
 
@@ -109,7 +109,7 @@ resource "azurerm_app_service" "weatherManApp" {
   tags = local.common_tags
 
   site_config {
-    always_on                = true
+    always_on = true
     # app_command_line         = "dotnet BradyWeather.Blazor.Server.dll"
     dotnet_framework_version = "v4.0"
   }
@@ -118,12 +118,12 @@ resource "azurerm_app_service" "weatherManApp" {
   }
 
   app_settings = {
-    "ASPNETCORE_ENVIRONMENT"                     = var.environment == "dev" ? "DEVELOPMENT" : "PRODUCTION" 
-    "Web:WeatherApi:BaseAddress"                 = var.weatherApiBaseURL
-    "WEBSITE_RUN_FROM_PACKAGE"                   = 0
-    "APPINSIGHTS_INSTRUMENTATIONKEY"             = azurerm_application_insights.appinsights.instrumentation_key
-    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.appinsights.connection_string
-  }  
+    "ASPNETCORE_ENVIRONMENT"                = var.environment == "dev" ? "DEVELOPMENT" : "PRODUCTION"
+    "Web:WeatherApi:BaseAddress"            = var.weatherApiBaseURL
+    "WEBSITE_RUN_FROM_PACKAGE"              = 0
+    "APPINSIGHTS_INSTRUMENTATIONKEY"        = azurerm_application_insights.appinsights.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.appinsights.connection_string
+  }
 }
 
 
