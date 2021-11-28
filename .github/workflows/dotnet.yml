@@ -63,6 +63,7 @@ jobs:
          tf_actions_working_dir: './Infrastructure'
       env:
         TF_VAR_environment: 'dev'
+        TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
@@ -72,6 +73,8 @@ jobs:
          tf_actions_working_dir: './Infrastructure'
       env:
         TF_VAR_environment: 'dev'
+        TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
+        
     
     - name: 'Terraform plan'
       uses: hashicorp/terraform-github-actions@master
@@ -81,6 +84,7 @@ jobs:
          tf_actions_working_dir: './Infrastructure'
       env:
         TF_VAR_environment: 'dev'
+        TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
 
     - name: 'Terraform Apply'
       if: github.ref == 'refs/head/main'
@@ -91,6 +95,7 @@ jobs:
          tf_actions_working_dir: './Infrastructure'
       env:
         TF_VAR_environment: 'dev'
+        TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
 # Commented the deployment to finish the infrastruture setup
   # deploy:
