@@ -143,7 +143,12 @@ jobs:
         tf_actions_subcommand: 'output'
         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
     - name: 'Use Terraform Output'
-      run: echo ${{ steps.terraform.outputs.tf_actions_output  }}
+      run: |
+        echo ${{ steps.terraform.outputs.tf_actions_output  }}
+        apt-get install jq
+        echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
+        APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
+        echo "::set-output name=apikeyref:$APIKEY"
     - name: 'Get API KeyVault Reference from outputs'
       id: fetch-api-key
       run: |
