@@ -74,6 +74,59 @@ resource "azurerm_resource_group" "rg" {
 }
 
 
+# Create app service plan
+resource "azurerm_app_service_plan" "plan" {
+  name                = "asp-${var.environment}-${var.webappName}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  kind                = "Windows"
+
+  sku {
+    tier = "Basic"
+    size = "B1"
+  }
+
+  tags = local.common_tags
+}
+
+# Create application insights
+resource "azurerm_application_insights" "appinsights" {
+  name                = "ai-${var.environment}-${var.webappName}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "web"
+
+  tags = local.common_tags
+}
+
+# Create app service
+resource "azurerm_app_service" "weatherManApp" {
+  name                = "${var.environment}-${var.webappName}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_app_service_plan.plan.id
+
+  tags = local.common_tags
+
+  site_config {
+    always_on                = true
+    # app_command_line         = "dotnet BradyWeather.Blazor.Server.dll"
+    dotnet_framework_version = "v4.0"
+  }
+  identity {
+    type = "SystemAssigned"
+  }
+
+  app_settings = {
+    "ASPNETCORE_ENVIRONMENT"                     = var.environment == "dev" ? "DEVELOPMENT" : "PRODUCTION" 
+    "Web:WeatherApi:BaseAddress"                 = var.weatherApiBaseURL
+    "WEBSITE_RUN_FROM_PACKAGE"                   = 0
+    "APPINSIGHTS_INSTRUMENTATIONKEY"             = azurerm_application_insights.appinsights.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.appinsights.connection_string
+  }  
+}
+
+
 output "test" {
   value = "Test output"
 }
