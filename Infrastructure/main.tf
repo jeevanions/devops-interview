@@ -126,9 +126,9 @@ resource "azurerm_key_vault_access_policy" "kvsecretpermission" {
 
   object_id = data.azurerm_client_config.current.object_id
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
+  #   lifecycle {
+  #     create_before_destroy = true
+  #   }
   secret_permissions = var.kv-secret-permissions-optimal
 }
 
