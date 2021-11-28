@@ -52,7 +52,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    needs: secuirty
+    needs: security
     environment: 'production'
     outputs:
       apikeykvref: ${{ steps.fetch-api-key.outputs.apikeyref }}
