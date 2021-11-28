@@ -195,7 +195,7 @@ resource "azurerm_app_service" "weatherManApp" {
   app_settings = {
     "ASPNETCORE_ENVIRONMENT"                = var.environment == "dev" ? "DEVELOPMENT" : "PRODUCTION"
     "Web:WeatherApi:BaseAddress"            = var.weatherApiBaseURL
-    "Web:WeatherApi:ApiKey"                      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.weathApiKeySecret.versionless_id})"
+    "Web:WeatherApi:ApiKey"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.weathApiKeySecret.versionless_id})"
     "WEBSITE_RUN_FROM_PACKAGE"              = 0
     "APPINSIGHTS_INSTRUMENTATIONKEY"        = azurerm_application_insights.appinsights.instrumentation_key
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.appinsights.connection_string
