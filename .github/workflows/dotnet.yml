@@ -148,7 +148,7 @@ jobs:
       id: fetch-api-key
       run: |
         apt-get install jq
-        APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey')
+        APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
         echo $APIKEY
         echo "::set-output name=apikeyref:$APIKEY"
       
