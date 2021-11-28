@@ -53,7 +53,7 @@ jobs:
       with:
          tf_actions_version: 0.14.8
          tf_actions_subcommand: 'fmt'
-         tf_actions_working_dir: './Infrastructure'
+         tf_actions_working_dir: './Infrastructure'      
     
     - name: 'Terraform Init'
       uses: hashicorp/terraform-github-actions@master
@@ -61,6 +61,8 @@ jobs:
          tf_actions_version: 0.14.8
          tf_actions_subcommand: 'init'
          tf_actions_working_dir: './Infrastructure'
+      env:
+        TF_ENVIRONMENT: 'dev'
     
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
@@ -68,6 +70,8 @@ jobs:
          tf_actions_version: 0.14.8
          tf_actions_subcommand: 'validate'
          tf_actions_working_dir: './Infrastructure'
+      env:
+        TF_ENVIRONMENT: 'dev'
     
     - name: 'Terraform plan'
       uses: hashicorp/terraform-github-actions@master
@@ -75,6 +79,8 @@ jobs:
          tf_actions_version: 0.14.8
          tf_actions_subcommand: 'plan'
          tf_actions_working_dir: './Infrastructure'
+      env:
+        TF_ENVIRONMENT: 'dev'
 
     - name: 'Terraform Apply'
       if: github.ref == 'refs/head/main'
@@ -83,6 +89,8 @@ jobs:
          tf_actions_version: 0.14.8
          tf_actions_subcommand: 'applya'
          tf_actions_working_dir: './Infrastructure'
+      env:
+        TF_ENVIRONMENT: 'dev'
     
 # Commented the deployment to finish the infrastruture setup
   # deploy:
