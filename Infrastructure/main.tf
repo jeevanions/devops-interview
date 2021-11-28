@@ -44,6 +44,16 @@ variable "owner" {
   description = "Used in created by tags to identify the owner of the resources."
 }
 
+variable "environment" {
+  type        = string
+  default     = "dev"
+  description = "Sets the environment for the resources and used to set ASPNETCORE_ENVIRONMENT env variable"
+  validation {
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "The environment value should be either dev or prod."
+  }
+}
+
 variable "weatherApiKey" {
   type        = string
   description = "API Key to access the weather API"
