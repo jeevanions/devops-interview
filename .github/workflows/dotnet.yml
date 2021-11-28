@@ -106,7 +106,6 @@ jobs:
         TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
-# Commented the deployment to finish the infrastruture setup
   deploy:
     runs-on: windows-latest
     needs: terraform
@@ -137,3 +136,13 @@ jobs:
       - name: Azure logout
         run: |
           az logout
+
+      # Below not needed if we are using github runner
+      # - name: Azure CLI script
+      #   uses: azure/CLI@v1
+      #   with:
+      #     azcliversion: 2.0.72
+      #     inlineScript: |
+      #       az logout
+      #       az cache purge
+      #       az account clear

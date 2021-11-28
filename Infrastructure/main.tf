@@ -71,7 +71,7 @@ variable "weatherApiBaseURL" {
 variable "kv-secret-permissions-optimal" {
   type        = list(any)
   description = "List of optimal secret permissions for this deployment"
-  default     = ["get", "list", "purge", "recover", "restore", "set"]
+  default     = ["get", "list", "set","delete"]
 }
 
 variable "kv-secret-permissions-read" {
