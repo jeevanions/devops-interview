@@ -6,6 +6,14 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: weatherMan    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '3.1.301'
+  TERRAFORM_VERSION: 1.0.11
+  TERRAFORM_WORKING_DIR: './Infrastructure'
+  ENVIRONEMNT: 'dev'
+
 jobs:
   build:
     runs-on: windows-latest
@@ -16,24 +24,25 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.301'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
           include-prerelease: false
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/weatherman
+        run: dotnet publish -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: weathermanapp
-          path: ${{env.DOTNET_ROOT}}/weatherman
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
 
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
+    needs: build
     environment: 'production'
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
@@ -51,71 +60,80 @@ jobs:
     - name: 'Terraform Format'
       uses: hashicorp/terraform-github-actions@master
       with:
-         tf_actions_version: 1.0.11
+         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
          tf_actions_subcommand: 'fmt'
-         tf_actions_working_dir: './Infrastructure'      
+         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
     
     - name: 'Terraform Init'
       uses: hashicorp/terraform-github-actions@master
       with:
-         tf_actions_version: 1.0.11
+         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
          tf_actions_subcommand: 'init'
-         tf_actions_working_dir: './Infrastructure'
+         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
       env:
-        TF_VAR_environment: 'dev'
+        TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
       with:
-         tf_actions_version: 1.0.11
+         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
          tf_actions_subcommand: 'validate'
-         tf_actions_working_dir: './Infrastructure'
+         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
       env:
-        TF_VAR_environment: 'dev'
+        TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
         
     
     - name: 'Terraform plan'
       uses: hashicorp/terraform-github-actions@master
       with:
-         tf_actions_version: 1.0.11
+         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
          tf_actions_subcommand: 'plan'
-         tf_actions_working_dir: './Infrastructure'
+         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
       env:
-        TF_VAR_environment: 'dev'
+        TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
 
     - name: 'Terraform Apply'
       # if: github.ref == 'refs/head/main'
       uses: hashicorp/terraform-github-actions@master
       with:
-         tf_actions_version: 1.0.11
+         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
          tf_actions_subcommand: 'apply'
-         tf_actions_working_dir: './Infrastructure'
+         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
       env:
-        TF_VAR_environment: 'dev'
+        TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
 # Commented the deployment to finish the infrastruture setup
-  # deploy:
-  #   runs-on: windows-latest
-  #   needs: terraform
-  #   environment:
-  #     name: 'production'
-  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  deploy:
+    runs-on: windows-latest
+    needs: terraform
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-  #   steps:
-  #     - name: Download artifact from build job
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: weathermanapp
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: weathermanappArtifacts
 
-  #     - name: Deploy to Azure Web App
-  #       id: deploy-to-webapp
-  #       uses: azure/webapps-deploy@v2
-  #       with:
-  #         app-name: 'dev-weatherMan'
-  #         slot-name: 'production'
-  #         publish-profile: ${{ secrets.PublishProfile }}
-  #         package: .
+      - name: Use Azure credentials
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          publish-profile: ${{ secrets.PublishProfile }}
+          package: .
+      
+      - name: Azure logout
+        run: |
+          az logout
