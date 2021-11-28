@@ -145,10 +145,11 @@ jobs:
     - name: 'Use Terraform Output'
       run: |
         echo ${{ steps.terraform.outputs.tf_actions_output  }}
-        apt-get install jq
-        echo "${{ fromJson(steps.tf_actions_output.kvsecretapikey).value }}"
+        # apt-get install jq
+        # echo "${{ fromJson(steps.tf_actions_output.kvsecretapikey).value }}"
         # echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
         # APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
+        # TODO: Read the tf output and set the env variable so other jobs can use it.
         echo "::set-output name=apikeyref:@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)"
 
     # - name: 'Get API KeyVault Reference from outputs'
