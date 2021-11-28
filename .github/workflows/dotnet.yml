@@ -142,15 +142,15 @@ jobs:
         tf_actions_version: ${{ env.TERRAFORM_VERSION }}
         tf_actions_subcommand: 'output'
         tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
-    - name: 'Use Terraform Output'
-      run: |
-        echo ${{ steps.terraform.outputs.tf_actions_output  }}
-        # apt-get install jq
-        # echo "${{ fromJson(steps.tf_actions_output.kvsecretapikey).value }}"
-        # echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
-        # APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
-        # TODO: Read the tf output and set the env variable so other jobs can use it.
-        echo "::set-output name=apikeyref:@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)"
+    # - name: 'Use Terraform Output'
+    #   run: |
+    #     echo ${{ steps.terraform.outputs.tf_actions_output  }}
+    #     # apt-get install jq
+    #     # echo "${{ fromJson(steps.tf_actions_output.kvsecretapikey).value }}"
+    #     # echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
+    #     # APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
+    #     # TODO: Read the tf output and set the env variable so other jobs can use it.
+    #     # echo "::set-output name=apikeyref:@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)"
 
     # - name: 'Get API KeyVault Reference from outputs'
     #   id: fetch-api-key
@@ -183,8 +183,7 @@ jobs:
         with:
           files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.json, ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json'
         env:
-          ConnectionStrings.Default: ${{ secrets.some_connection_string }}
-          App.ServerRootAddress: ${{ env.SERVER_ROOT_ADDRESS }}
+          Web:WeatherApi.ApiKey: '@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)'
 
       - name: Use Azure credentials
         uses: azure/login@v1
