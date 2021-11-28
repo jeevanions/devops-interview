@@ -38,12 +38,24 @@ jobs:
         with:
           name: weathermanappArtifacts
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
-
+  
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/dotnet@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    needs: build
+    needs: secuirty
     environment: 'production'
+    outputs:
+      apikeykvref: ${{ steps.fetch-api-key.outputs.apikeyref }}
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
@@ -55,7 +67,7 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2    
 
     - name: 'Terraform Format'
       uses: hashicorp/terraform-github-actions@master
@@ -106,6 +118,23 @@ jobs:
         TF_VAR_environment: ${{ env.ENVIRONEMNT }}
         TF_VAR_weatherApiKey: ${{ secrets.WEATHER_API_KEY }}
     
+    - name: 'Terraform Output'
+      id: terraform
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: ${{ env.TERRAFORM_VERSION }}
+        tf_actions_subcommand: 'output'
+        tf_actions_working_dir: ${{ env.TERRAFORM_WORKING_DIR }}
+    - name: 'Use Terraform Output'
+      run: echo ${{ steps.terraform.outputs.tf_actions_output  }}
+    - name: 'Get API KeyVault Reference from outputs'
+      id: fetch-api-key
+      run: |
+        apt-get install jq
+        APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey')
+        echo $APIKEY
+        echo "::set-output name=apikeyref:$APIKEY"
+      
   deploy:
     runs-on: windows-latest
     needs: terraform
@@ -114,10 +143,21 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: Get Weather APIKEY Reference
+        run: echo ${{ needs.terraform.outputs.apikeykvref }}
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
           name: weathermanappArtifacts
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
+  
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.json, ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json'
+        env:
+          ConnectionStrings.Default: ${{ secrets.some_connection_string }}
+          App.ServerRootAddress: ${{ env.SERVER_ROOT_ADDRESS }}
 
       - name: Use Azure credentials
         uses: azure/login@v1
@@ -130,7 +170,7 @@ jobs:
         with:
           app-name: '${{ env.ENVIRONEMNT }}-${{ env.AZURE_WEBAPP_NAME }}'
           slot-name: 'production'
-          package: .
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
       
       - name: Azure logout
         run: |

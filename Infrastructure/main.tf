@@ -193,7 +193,7 @@ resource "azurerm_app_service" "weatherManApp" {
   }
 
   app_settings = {
-    "ASPNETCORE_ENVIRONMENT"                = var.environment == "dev" ? "DEVELOPMENT" : "PRODUCTION"
+    "ASPNETCORE_ENVIRONMENT"                = var.environment == "dev" ? "Development" : "Production"
     "Web:WeatherApi:BaseAddress"            = var.weatherApiBaseURL
     "Web:WeatherApi:ApiKey"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.weathApiKeySecret.versionless_id})"
     "WEBSITE_RUN_FROM_PACKAGE"              = 0
@@ -201,8 +201,6 @@ resource "azurerm_app_service" "weatherManApp" {
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.appinsights.connection_string
   }
 }
-
-
 
 # Access Policy to allow webapp to access keyvault
 resource "azurerm_key_vault_access_policy" "kvapweatherManApp" {
@@ -214,6 +212,6 @@ resource "azurerm_key_vault_access_policy" "kvapweatherManApp" {
   secret_permissions = var.kv-secret-permissions-read
 }
 
-output "test" {
-  value = "Test output"
+output "kvsecretapikey" {
+  value = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.weathApiKeySecret.versionless_id})"
 }
