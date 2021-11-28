@@ -203,6 +203,17 @@ resource "azurerm_app_service" "weatherManApp" {
 }
 
 
+
+# Access Policy to allow webapp to access keyvault
+resource "azurerm_key_vault_access_policy" "kvapweatherManApp" {
+  key_vault_id = azurerm_key_vault.kvweatherman.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+
+  object_id = azurerm_app_service.weatherManApp.identity.0.principal_id
+
+  secret_permissions = var.kv-secret-permissions-read
+}
+
 output "test" {
   value = "Test output"
 }
