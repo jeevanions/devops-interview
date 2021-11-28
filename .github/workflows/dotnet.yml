@@ -130,7 +130,6 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'production'
-          publish-profile: ${{ secrets.PublishProfile }}
           package: .
       
       - name: Azure logout
