@@ -66,6 +66,19 @@ variable "weatherApiBaseURL" {
 }
 
 
+variable "kv-secret-permissions-optimal" {
+  type        = list
+  description = "List of optimal secret permissions for this deployment"
+  default     = [ "get", "list", "purge", "recover", "restore", "set" ]
+} 
+
+variable "kv-secret-permissions-read" {
+  type        = list
+  description = "Required secret permissions for read operation for this deplpyment; get and list "
+  default     = [ "get", "list" ]
+} 
+
+
 ### End of variables
 
 locals {
@@ -76,6 +89,7 @@ locals {
   }
 }
 
+data "azurerm_client_config" "current" {}
 
 # Create a resource group
 resource "azurerm_resource_group" "rg" {
