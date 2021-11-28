@@ -146,18 +146,20 @@ jobs:
       run: |
         echo ${{ steps.terraform.outputs.tf_actions_output  }}
         apt-get install jq
-        echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
-        APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
-        echo "::set-output name=apikeyref:$APIKEY"
-    - name: 'Get API KeyVault Reference from outputs'
-      id: fetch-api-key
-      run: |
-        apt-get install jq
-        echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
-        echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value' >> $APIKEY
-        # APIKEY=$(`echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'`)
-        echo $APIKEY
-        echo "::set-output name=apikeyref:$APIKEY"
+        echo "${{ fromJson(steps.tf_actions_output.kvsecretapikey).value"
+        # echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
+        # APIKEY=$(echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value')
+        echo "::set-output name=apikeyref:@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)"
+
+    # - name: 'Get API KeyVault Reference from outputs'
+    #   id: fetch-api-key
+    #   run: |
+    #     apt-get install jq
+    #     echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'
+    #     echo echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value' >> $APIKEY
+    #     # APIKEY=$(`echo ${{ steps.terraform.outputs.tf_actions_output }} | jq -r '.kvsecretapikey.value'`)
+    #     echo $APIKEY
+    #     echo "::set-output name=apikeyref:$APIKEY"
       
   deploy:
     runs-on: windows-latest
