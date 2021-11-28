@@ -52,12 +52,18 @@ jobs:
           include-prerelease: false
 
       - name: Restore the app
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Debug
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk.sarif --file=BradyWeather.sln
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
           
   terraform:
     name: 'Terraform'
