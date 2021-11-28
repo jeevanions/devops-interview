@@ -14,6 +14,8 @@ terraform {
     container_name       = "terraform-state"
     key                  = "weatherman.tfstate"
   }
+
+  required_version = "~> 1.0.11"
 }
 
 # Configure the Microsoft Azure Provider
@@ -67,16 +69,16 @@ variable "weatherApiBaseURL" {
 
 
 variable "kv-secret-permissions-optimal" {
-  type        = list
+  type        = list(any)
   description = "List of optimal secret permissions for this deployment"
-  default     = [ "get", "list", "purge", "recover", "restore", "set" ]
-} 
+  default     = ["get", "list", "purge", "recover", "restore", "set"]
+}
 
 variable "kv-secret-permissions-read" {
-  type        = list
+  type        = list(any)
   description = "Required secret permissions for read operation for this deplpyment; get and list "
-  default     = [ "get", "list" ]
-} 
+  default     = ["get", "list"]
+}
 
 
 ### End of variables
