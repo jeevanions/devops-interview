@@ -181,7 +181,7 @@ jobs:
       # Remove Appsettings.json files as we are using kv and tf to provision settings from appservice settings
       - name: 'Remove Appsettings.json files'
         run: |
-          ls -lrt ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/
+          ls ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/
           rm -f ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings*.json
       # This doesnt work as the kv reference in appsettings.json doesnt resolve to secrets
       # - name: App Settings Variable Substitution
