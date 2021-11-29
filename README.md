@@ -94,5 +94,13 @@ This is simple version of CICD pipeline to build, test, check for vulnerability,
   Deployment uses the Azure creds from github repo secrets.
   Downloads the build artifacts and removes the appsettings file as the settings are referenced from keyvault.
 
+## Deployed App
+  You can access the app here https://dev-weatherman.azurewebsites.net/ but use Chrome browser. I did not test on other browser apart from firefox.
+
 ## Challenges
    1. Considering the security, I decided to use key vault to store and reference them directly in the appservice settings. There is an option that we can inject the secrets from github secrets into appsettings files but then the value is stored as plain text in Azure webapp. The appsettings with empty value did not allow me to override these settings from Azure appservice settings. So deleted these files and any new appsettings should be provisioned through TF as secrets. 
+   2. Initially started building the app in mac environment which proved difficult as the statechanged event is not reliable.
+   3. Also during manual testing found  that the app works in Chrome but in Firefox the call to get weather is succcessful but doesnt show the results in the screen. I guess it is due to statechanged event not firing. 
+   4. I am new to both Github actions (usually work with Azure pipelines but was able to pick this in no time) and Blazor app (needed some read through from ms docs). In my experience often working alongside with developer always helped me to understand the tech stack and navigate around the code.
+ 
+     
