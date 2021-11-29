@@ -75,7 +75,7 @@ The requirement is broken down into below tasks
 - [X] App Versioning
 
 ## DevOps Soultion Diagram
-![Blazor Weather](Docs/architecture.png)
+![DevOps Architecture](Docs/architecture.png)
 
 ## Pipeline Stages
 This is simple version of CICD pipeline to build, test, check for vulnerability, provision environment and deploy.
@@ -104,5 +104,14 @@ This is simple version of CICD pipeline to build, test, check for vulnerability,
    2. Initially started building the app in mac environment which proved difficult as the statechanged event is not reliable.
    3. Also during manual testing found  that the app works in Chrome but in Firefox the call to get weather is succcessful but doesnt show the results in the screen. I guess it is due to statechanged event not firing. 
    4. I am new to both Github actions (usually work with Azure pipelines but was able to pick this in no time) and Blazor app (needed some read through from ms docs). In my experience often working alongside with developer always helped me to understand the tech stack and navigate around the code.
- 
+
+## Evidence
+
+![Home Page](Docs/HomePage.png)
+
+![Weather Result](Docs/WeatherResult.png)
+
+![Azure AppService Settings](Docs/AzureAppServiceSettingsShowingKvRef.png)
+
+
      
