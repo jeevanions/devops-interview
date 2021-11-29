@@ -48,10 +48,10 @@ Your CI job should:
 
 ## Tasks Breakdown
 The requirement is broken down into below tasks
-[X] Pull sorce code locally to build, run and verify.
-[X] Register for an account with Accuweather, get the API key to configure the app.
-[X] Update the app with API key locally to test it. 
-[X] Create CI pipelines using Github actions.
+- [X] Pull sorce code locally to build, run and verify.
+- [X] Register for an account with Accuweather, get the API key to configure the app.
+- [X] Update the app with API key locally to test it. 
+- [X] Create CI pipelines using Github actions.
     [X] Build app and run any unit tests available on every push to main branch. 
     [X] Store build artifacts
 [X] Create a webapp to manually publish and check whether the app works fine. This is to find out any issues we may find during deployment.
