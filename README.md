@@ -46,6 +46,8 @@ Your CI job should:
 ------------------------------------------------------------------------------------------------------------------------
 # DevOps Engineer - technical interview submission
 
+![Workflow](https://github.com/jeevanions/devops-interview/actions/workflows/dotnet.yml/badge.svg)
+
 ## Tasks Breakdown
 The requirement is broken down into below tasks
 - [X] Pull sorce code locally to build, run and verify.
