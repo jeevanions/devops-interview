@@ -182,8 +182,7 @@ jobs:
       - name: 'Remove Appsettings.json files'
         run: |
           ls -lrt ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/
-          rm -f ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json
-          rm -f ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json
+          rm -f ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings*.json
       # This doesnt work as the kv reference in appsettings.json doesnt resolve to secrets
       # - name: App Settings Variable Substitution
       #   uses: microsoft/variable-substitution@v1
