@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BradyWeather.Common", "Src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BradyWeather.Razor.Library", "Src\Common\BradyWeather.Razor.Library\BradyWeather.Razor.Library.csproj", "{E8C1F74D-6FB1-45CC-91B4-07157C4AF3F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BradyWeather.Tests", "BradyWeather.Tests\BradyWeather.Tests.csproj", "{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,18 @@ Global
 		{E8C1F74D-6FB1-45CC-91B4-07157C4AF3F1}.Release|x64.Build.0 = Release|Any CPU
 		{E8C1F74D-6FB1-45CC-91B4-07157C4AF3F1}.Release|x86.ActiveCfg = Release|Any CPU
 		{E8C1F74D-6FB1-45CC-91B4-07157C4AF3F1}.Release|x86.Build.0 = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|x64.Build.0 = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Debug|x86.Build.0 = Debug|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|x64.ActiveCfg = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|x64.Build.0 = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|x86.ActiveCfg = Release|Any CPU
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +112,7 @@ Global
 		{466C70E1-7B19-40C7-8D71-33915A2AE95C} = {A7CE6C36-3C62-43B4-9215-56F77F1F324D}
 		{6A07E2FC-3DC8-4FD0-B839-CE82927D66CA} = {466C70E1-7B19-40C7-8D71-33915A2AE95C}
 		{E8C1F74D-6FB1-45CC-91B4-07157C4AF3F1} = {466C70E1-7B19-40C7-8D71-33915A2AE95C}
+		{A8DB1FA2-723B-418A-9762-AE1E627DE5C2} = {2FE03EF4-A6EA-41A4-854B-0D80C3C50E3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D52ED335-5191-4903-92B0-AC359C1A7787}

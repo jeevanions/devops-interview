@@ -297,3 +297,7 @@ AggrekoTech.Webapi/src/**/*.map
 # Stryker.net
 
 StrykerLogs
+
+Infrastructure/.terraform.lock.hcl
+Infrastructure/.terraform/
+Src/Presentation/BradyWeather.Blazor.Server/Properties/ServiceDependencies/dev-weatherMan - Web Deploy/
