@@ -170,8 +170,8 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Get Weather APIKEY Reference
-        run: echo ${{ needs.terraform.outputs.apikeykvref }}
+      # - name: Get Weather APIKEY Reference
+      #   run: echo ${{ needs.terraform.outputs.apikeykvref }}
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
