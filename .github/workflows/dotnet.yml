@@ -187,7 +187,7 @@ jobs:
     runs-on: windows-latest
     needs: [ build, terraform ]
     environment:
-      name: ${{ env.ENVIRONEMNT }}
+      name: '${{ env.ENVIRONEMNT }}'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     # Only deploy if running off the main branch 
     if: github.ref == 'refs/heads/main'
