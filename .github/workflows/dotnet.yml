@@ -33,6 +33,9 @@ jobs:
       - name: Determine Version
         uses: gittools/actions/gitversion/execute@v0.9.7
         id: gitversion # step id used as reference for output values
+        with:
+          useConfigFile: true           
+          configFilePath: './versions/GitVersion.yml'
       - name: Display GitVersion outputs
         run: |
           echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
