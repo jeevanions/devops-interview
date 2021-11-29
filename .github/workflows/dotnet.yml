@@ -177,13 +177,19 @@ jobs:
         with:
           name: weathermanappArtifacts
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman
-  
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.json, ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json'
-        env:
-          Web:WeatherApi.ApiKey: '@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)'
+      
+      # Remove Appsettings.json files as we are using kv and tf to provision settings from appservice settings
+      - name: 'Remove Appsettings.json files'
+        run: |
+          rm ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json
+          rm ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json
+      # This doesnt work as the kv reference in appsettings.json doesnt resolve to secrets
+      # - name: App Settings Variable Substitution
+      #   uses: microsoft/variable-substitution@v1
+      #   with:
+      #     files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.json, ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weatherman/appsettings.development.json'
+      #   env:
+      #     Web:WeatherApi.ApiKey: '@Microsoft.KeyVault(SecretUri=https://kv-weatherman.vault.azure.net/secrets/weatherApiKey)'
 
       - name: Use Azure credentials
         uses: azure/login@v1
